@@ -8,7 +8,21 @@
     #set($count = $field.values.size())
     #if($count > 0)
     <div class="facet" id="facet-$field.name">     
-      <h3>#normalize_facet($field.name)</h3>
+      <h3>
+       #if($field.name.matches("creator_facet"))
+          registrant
+       #else
+		    #if($field.name.matches("allocator_facet"))
+		       allocation agent
+		    #else
+				 #if($field.name.matches("datacentre_facet"))
+				    collection
+				 #else
+				    #normalize_facet($field.name)
+				 #end
+		    #end
+       #end
+      </h3>
       <div class="facet_data">
         <ul>
           <li class="hidden">&nbsp;</li> ## ugly hack to make validator happy

@@ -125,12 +125,12 @@
    <!-- DataCite mandatory fields -->
    <field name="doi" type="lowercase" indexed="true" stored="true" required="true" /> 
    <field name="creator" type="textgen" indexed="true" stored="true" multiValued="true"/> 
-   <field name="title" type="textgen" indexed="true" stored="true" multiValued="true"/> 
+  <!-- <field name="title" type="textgen" indexed="true" stored="true" multiValued="true"/> 
    <field name="publisher" type="textgen" indexed="true" stored="true"/> 
    <field name="publicationYear" type="string" indexed="true" stored="true"/> 
-
+-->
    <!-- DataCite optional fields -->
-   <field name="subject" type="textgen" indexed="true" stored="true" multiValued="true"/> 
+ <!--  <field name="subject" type="textgen" indexed="true" stored="true" multiValued="true"/> 
    <field name="contributor" type="textgen" indexed="true" stored="true" multiValued="true"/>
    <field name="date" type="string" indexed="true" stored="true" multiValued="true"/>
    <field name="language" type="langcode" indexed="true" stored="true"/>
@@ -138,13 +138,13 @@
    <field name="resourceType" type="textgen" indexed="true" stored="true"/>
    <field name="resourceTypeGeneral" type="lowercase" indexed="true" stored="true"/>
    <field name="alternateIdentifier" type="identifiers" indexed="true" stored="true" multiValued="true"/>
-   <field name="relatedIdentifier" type="identifiers" indexed="true" stored="true" multiValued="true"/>
-   <field name="size" type="textgen" indexed="true" stored="true" multiValued="true"/>
+ -->  <field name="relatedIdentifier" type="identifiers" indexed="true" stored="true" multiValued="true"/>
+ <!--  <field name="size" type="textgen" indexed="true" stored="true" multiValued="true"/>
    <field name="format" type="text" indexed="true" stored="true" multiValued="true"/>
    <field name="rights" type="text" indexed="true" stored="true"/>
    <field name="version" type="string" indexed="true" stored="true"/>
    <field name="description" type="textgen" indexed="true" stored="true" multiValued="true"/>
-   
+-->   
    <field name="nameIdentifier" type="identifiers" indexed="true" stored="true" multiValued="true"/>
    
    
@@ -163,7 +163,6 @@
    <field name="schema_version" type="string" indexed="true" stored="true" default="2.0"/>
 
    <field name="dif" type="binary" indexed="false" stored="true"/>
-   <field name="iso" type="binary" indexed="false" stored="true"/>
 
    <field name="media" type="identifiers" indexed="true" stored="true" multiValued="true"/>
    
@@ -204,13 +203,13 @@
   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
- <copyField source="resourceTypeGeneral" dest="resourceType_facet"/>
+ <!--<copyField source="resourceTypeGeneral" dest="resourceType_facet"/>-->
  <copyField source="datacentre" dest="datacentre_facet"/>
  <copyField source="allocator" dest="allocator_facet"/>
  <copyField source="creator" dest="creator_facet"/>
- <copyField source="publisher" dest="publisher_facet"/>
+<!-- <copyField source="publisher" dest="publisher_facet"/>
  <copyField source="contributor" dest="contributor_facet"/>
  <copyField source="subject" dest="subject_facet"/>
  <copyField source="language" dest="language_facet"/>
-
+-->
 </schema>

@@ -51,9 +51,9 @@
     <noscript>Javascript is required for Advanced Field Search.</noscript>
 
     #field_text("doi", "DOI")
-    #field_text("title", "Title")
+<!--    #field_text("title", "Title")-->
     #field_text("creator", "Creator")
-    #field_text("publisher", "Publisher")
+<!--    #field_text("publisher", "Publisher")
     #field_text("contributor", "Contributor")
     #field_text("format", "Format")
     #field_text("subject", "Subject")
@@ -61,8 +61,8 @@
     #field_text("description", "Description")
     #field_text("resourceType", "Resource Type")
     #field_text("alternateIdentifier", "Alternate Identifier")
-    #field_text("relatedIdentifier", "Related Identifier")
-    #field_range("publicationYear", "Publication Year")
+-->    #field_text("relatedIdentifier", "Related Identifier")
+<!--    #field_range("publicationYear", "Publication Year")-->
   </fieldset>
 
   <fieldset id="advanced_fieldset_filter">
@@ -70,8 +70,8 @@
     #select_facet("prefix", "Prefix")
     #select_facet("allocator_facet", "Allocator")
     #select_facet("datacentre_facet", "Datacentre")
-    #select_facet("resourceType_facet", "General Resource Type")
-    #select_facet("language_facet", "Language")
+<!--    #select_facet("resourceType_facet", "General Resource Type")
+    #select_facet("language_facet", "Language")-->
     #select_facet("has_metadata", "Has Metadata")
   </fieldset>
   

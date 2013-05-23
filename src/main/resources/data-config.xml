@@ -17,7 +17,6 @@
                     m.xml IS NOT NULL as has_metadata,
                     m.id as metadata_id,
                     m.dif IS NOT NULL as has_dif,
-                    m.iso IS NOT NULL as has_iso,
                     m.created AS uploaded,
                     d.created AS created,
                     m.namespace,
@@ -55,11 +54,14 @@
 
       <entity name="if_metadata" hasField="dataset.has_metadata" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
       <entity name="xml" dataSource="field" dataField="dataset.xml"
-        forEach="/resource" processor="XPathEntityProcessor" onError="skip"
+        forEach="/sample" processor="XPathEntityProcessor" onError="skip"
         transformer="org.datacite.search.handler.dataimport.KeyValueTransformer">
+
+<!-- 
         <field column="title" xpath="//title" />
-        <field column="creator" xpath="//creatorName" />
-        <field column="publisher" xpath="//publisher" />
+-->
+        <field column="creator" xpath="//registrantName" />
+<!--        <field column="publisher" xpath="//publisher" />
         <field column="publicationYear" xpath="//publicationYear" />
         <field column="subject" xpath="//subject" />
         <field column="contributor" xpath="//contributorName" />
@@ -67,11 +69,11 @@
         <field column="language" xpath="//language" />
         <field column="resourceTypeGeneral" xpath="//resourceType/@resourceTypeGeneral" />
         <field column="resourceType" xpath="//resourceType" />
-        
+       
         <field column="ignored_alternateIdentifier_type" xpath="//alternateIdentifier/@alternateIdentifierType" />
         <field column="ignored_alternateIdentifier" xpath="//alternateIdentifier" />
         <field column="alternateIdentifier" keys="ignored_alternateIdentifier_type" values="ignored_alternateIdentifier" />
-        
+-->        
         <field column="ignored_relatedIdentifier_type" xpath="//relatedIdentifier/@relatedIdentifierType" />
         <field column="ignored_relatedIdentifier_relation" xpath="//relatedIdentifier/@relationType" />
         <field column="ignored_relatedIdentifier" xpath="//relatedIdentifier" />
@@ -81,12 +83,13 @@
         <field column="ignored_nameIdentifier_scheme" xpath="//nameIdentifier/@nameIdentifierScheme" />
         <field column="ignored_nameIdentifier" xpath="//nameIdentifier" />
         <field column="nameIdentifier" keys="ignored_nameIdentifier_scheme" values="ignored_nameIdentifier" />
-        
+<!--        
         <field column="size" xpath="//size" />
         <field column="format" xpath="//format" />
         <field column="version" xpath="//version" />
         <field column="rights" xpath="//right" />
         <field column="description" xpath="//description" />
+-->
       </entity>
       </entity>
  
@@ -95,10 +98,6 @@
       </entity>
       </entity>
 
-      <entity name="if_iso" hasField="dataset.has_iso" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
-      <entity name="iso" dataSource="db"  query="SELECT iso FROM metadata WHERE id = '${dataset.metadata_id}' ">
-      </entity>
-      </entity>
 
       <entity name="if_media" hasField="dataset.has_media" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
       <entity name="media" dataSource="db"
