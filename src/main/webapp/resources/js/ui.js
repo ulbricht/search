@@ -44,12 +44,12 @@ dialog = {
 
 dialog.help = new Dialog;
 dialog.help.load = function() { 
-	this.div.load_sync("help.html #content").modalDialog("DataCite Metadata Search Help");
+	this.div.load_sync("help.html #content").modalDialog("DOIDB Metadata Search Help");
 };
 
 dialog.advanced = new Dialog;
 dialog.advanced.load = function() {
-	this.div.load_sync("ui-advanced form").modalDialog("DataCite Metadata Advanced Search", true, true);
+	this.div.load_sync("ui-advanced form").modalDialog("DOIDB Metadata Advanced Search", true, true);
 	advanced.init_for_dialog();
 };
 

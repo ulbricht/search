@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-    <ShortName>DataCite</ShortName>
-    <LongName>DataCite Metadata Search</LongName>
-    <Description>Search in DataCite Metadata Catalogue</Description>
+    <ShortName>DOIDB</ShortName>
+    <LongName>DOIDB Metadata Search</LongName>
+    <Description>Search in DOIDB Metadata Catalogue</Description>
     <Tags>search</Tags>
-    <Contact>tech@datacite.org</Contact>
+    <Contact>ulbricht@gfz-potsdam.de</Contact>
     <Url type="text/html"
-        template="http://search.datacite.org/ui?q={searchTerms}" />
+        template="http://doidb.wdc-terra.org/search/ui?q={searchTerms}" />
+<!--
     <Image height="16" width="16" type="image/vnd.microsoft.icon">
         http://search.datacite.org/resources/img/favicon.ico
     </Image>
+-->
     <Query role="example" searchTerms="laser" />
     <Developer>DataCite Developer Core Group</Developer>
     <Attribution>

@@ -15,6 +15,9 @@
                     CONCAT(al.symbol, ' - ', al.name) AS allocator,
                     m.xml,
                     m.xml IS NOT NULL as has_metadata,
+                    m.id as metadata_id,
+                    m.dif IS NOT NULL as has_dif,
+                    m.iso IS NOT NULL as has_iso,
                     m.created AS uploaded,
                     d.created AS created,
                     m.namespace,
@@ -33,6 +36,7 @@
              JOIN datacentre AS dc ON d.datacentre = dc.id
              JOIN allocator AS al ON dc.allocator = al.id
              WHERE d.doi not like '${dataimporter.request.testprefix}/%'
+               AND al.symbol != 'TEST'
                AND ( '${dataimporter.request.clean}' != 'false'
                      OR GREATEST(d.updated,
                                  IFNULL(m.created,0),
@@ -86,6 +90,16 @@
       </entity>
       </entity>
  
+      <entity name="if_dif" hasField="dataset.has_dif" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
+      <entity name="dif" dataSource="db"  query="SELECT dif FROM metadata WHERE id = '${dataset.metadata_id}' ">
+      </entity>
+      </entity>
+
+      <entity name="if_iso" hasField="dataset.has_iso" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
+      <entity name="iso" dataSource="db"  query="SELECT iso FROM metadata WHERE id = '${dataset.metadata_id}' ">
+      </entity>
+      </entity>
+
       <entity name="if_media" hasField="dataset.has_media" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
       <entity name="media" dataSource="db"
         query="SELECT CONCAT(media_type,':',url) AS media

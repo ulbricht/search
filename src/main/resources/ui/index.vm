@@ -10,8 +10,9 @@
       <div id="topbar">
         <div id="links">
           <a href="ui-advanced" id="link_advanced">Advanced Search</a> |
-          <a href="http://datacite.org/whatisdatacite">About Us</a> |
+<!--          <a href="http://datacite.org/whatisdatacite">About Us</a> |
           <a href="http://datacite.org/contact">Contact</a> |
+-->
           <a href="help.html" id="link_help">Help</a>
         </div>
         <div id="options">
@@ -20,8 +21,10 @@
       <div id="title">
       <div> <!-- hack: needed in ie7 for correct centering -->
         <a href="ui" class="title">
-          <img src="resources/img/dc-logo.gif" alt="DataCite Logo"/>
-          Metadata Search <small>beta</small>
+          <!--
+		<img src="resources/img/dc-logo.gif" alt="DataCite Logo"/>
+	-->
+         DOIDB Metadata Search <!--<small>beta</small>-->
         </a>
         <div id="query">
           #parse("ui/query.vm")

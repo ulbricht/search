@@ -3,19 +3,19 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>DataCite Metadata Search Help</title>
+<title>DOIDB  Search Help</title>
 <link rel="stylesheet" type="text/css" href="resources/css/ui.css" />
 <link rel="SHORTCUT ICON" href="resources/img/favicon.ico" />
 </head>
 <body class="help">
 <div id="title"><a href="ui" class="title"> 
-  <img src="resources/img/dc-logo.gif" alt="DataCite Logo" /> Metadata Search <small>beta</small></a>
+<!--  <img src="resources/img/dc-logo.gif" alt="DataCite Logo" />--> DOIDB Metadata Search <small>beta</small></a>
 </div>
-<h1>DataCite Metadata Search Help</h1>
+<h1>DOIDB Metadata Search Help</h1>
 <div id="content">
 <p>
-DataCite Metadata Search offers a simple search interface for metadata
-of datasets registered with <a href="https://mds.datacite.org">MDS</a>.
+DOIDB Metadata Search is an instance of the <a href="http://github.com/datacite">DataCite Metadata Search</a> that allows to search the datasets registered at DataCite through  
+<a href="https://doidb.wdc-terra.org/mds">DOIDB Service</a> that is hosted at GFZ Potsdam.
 </p>
 
 <p>
@@ -148,7 +148,7 @@ This is especially interesting for dates, e.g. <code>publicationYear:[1990 TO 19
     </tr>
     <tr>
       <td><code>allocator:(BL OR TIB)</code></td>
-      <td>belonging to DataCite members <a href="http://datacite.org/britishlibrary">BL</a> or <a href="http://datacite.org/TIB">TIB</a></td>
+      <td>currently only DOIDB is reasonable</td>
     </tr>
     <tr>
       <td><code>publicationYear:[2000 TO 2005]</code></td>
@@ -156,23 +156,23 @@ This is especially interesting for dates, e.g. <code>publicationYear:[1990 TO 19
     </tr>
     <tr>
       <td><code>uploaded:[NOW-5DAYS TO NOW]</code></td>
-      <td>uploaded to DataCite in the last 5 days</td>
+      <td>uploaded in the last 5 days</td>
     </tr>
   </table>
 
 <h2>API</h2>
 
-<p>This service is also available as an API. We use Solr Search Handler for our API calls, the endpoint is: <a href="http://search.datacite.org/api">http://search.datacite.org/api</a>.</p>
+<p>This service is also available as an API. We use Solr Search Handler for our API calls, the endpoint is: <a href="http://doidb.wdc-terra.org/search/api">http://doidb.wdc-terra.org/search/api</a>.</p>
 
 <p>Please check <a href="http://wiki.apache.org/solr/CommonQueryParameters">Solr's common query parameters</a> documentation in order to understand how to use API.</p>
 
 <h3>Examples</h3>
 
 <ul>
-  <li><a href="http://search.datacite.org/api?q=wind"><code>http://search.datacite.org/api?q=wind</code> simple search for <em>wind</em></a></li>
-  <li><a href="http://search.datacite.org/api?q=wind&amp;fl=doi,title&amp;rows=5"><code>http://search.datacite.org/api?q=wind&amp;fl=doi,title&amp;rows=5</code> search for <em>wind</em>, retrieve only <em>doi</em> and <em>title</em>, and return (at max.) 5 results</a></li>
-  <li><a href="http://search.datacite.org/api?q=wind&amp;fl=doi,title&amp;wt=csv"><code>http://search.datacite.org/api?q=wind&amp;fl=doi,title&amp;wt=csv</code> csv output</a></li>
-  <li><a href="http://search.datacite.org/api?q=wind&amp;fl=doi,title&amp;wt=json&amp;indent=true"><code>http://search.datacite.org/api?q=wind&amp;fl=doi,title&amp;wt=json&amp;indent=true</code> json output</a></li>
+  <li><a href="http://doidb.wdc-terra.org/search/api?q=wind"><code>http://doidb.wdc-terra.org/search/api?q=wind</code> simple search for <em>wind</em></a></li>
+  <li><a href="http://doidb.wdc-terra.org/search/api?q=wind&amp;fl=doi,title&amp;rows=5"><code>http://doidb.wdc-terra.org/search/api?q=wind&amp;fl=doi,title&amp;rows=5</code> search for <em>wind</em>, retrieve only <em>doi</em> and <em>title</em>, and return (at max.) 5 results</a></li>
+  <li><a href="http://doidb.wdc-terra.org/search/api?q=wind&amp;fl=doi,title&amp;wt=csv"><code>http://doidb.wdc-terra.org/search/api?q=wind&amp;fl=doi,title&amp;wt=csv</code> csv output</a></li>
+  <li><a href="http://doidb.wdc-terra.org/search/api?q=wind&amp;fl=doi,title&amp;wt=json&amp;indent=true"><code>http://doidb.wdc-terra.org/search/api?q=wind&amp;fl=doi,title&amp;wt=json&amp;indent=true</code> json output</a></li>
 </ul>
 </div>
 </body>
