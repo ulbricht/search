@@ -23,7 +23,8 @@
                     d.is_ref_quality AS refQuality,
                     mt.dataset IS NOT NULL AS has_media,
                     if(d.is_active,null,'true') AS $skipDoc,
-                    if(d.is_active,null,d.doi) AS $deleteDocById
+                    if(d.is_active,null,d.doi) AS $deleteDocById,
+						  p.prefix as prefix
              FROM dataset AS d
              LEFT JOIN metadata AS m
                ON m.dataset = d.id
@@ -34,6 +35,7 @@
              LEFT JOIN media AS mt ON mt.dataset = d.id
              JOIN datacentre AS dc ON d.datacentre = dc.id
              JOIN allocator AS al ON dc.allocator = al.id
+				 JOIN prefix p ON d.doi LIKE CONCAT (p.prefix,'%')
              WHERE d.doi not like '${dataimporter.request.testprefix}/%'
                AND al.symbol != 'TEST'
                AND ( '${dataimporter.request.clean}' != 'false'
@@ -49,7 +51,7 @@
         using delta import as proposed in
         http://wiki.apache.org/solr/DataImportHandlerDeltaQueryViaFullImport
        -->
-      <field column="prefix" regex="([^/]*)/" sourceColName="doi"/>
+<!--      <field column="prefix" regex="([^/]*)/" sourceColName="doi"/>-->
       <field column="schema_version" regex="-(\d+(.\d+)*)$" sourceColName="namespace"/>
 
       <entity name="if_metadata" hasField="dataset.has_metadata" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
