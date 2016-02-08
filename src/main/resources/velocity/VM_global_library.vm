@@ -79,8 +79,11 @@
 
 #macro(make_fq $field $value)$esc.url($field):%22$esc.url($value)%22#end
 
+
+#macro(sort)#if($request.originalParams.sort)&amp;sort=$esc.url($request.originalParams.sort)#end#end
+
 #macro(lens_without_q)#fqs#end
-#macro(lens)#qurl#lens_without_q#end
+#macro(lens)#qurl#sort#lens_without_q#end
 
 #macro(url_for_nofilters)?#qurl#end
 #macro(url_for_lens)?#lens#end

@@ -24,10 +24,13 @@
           <!--
 		<img src="resources/img/dc-logo.gif" alt="DataCite Logo"/>
 	-->
-         GFZ Data Services: Metadata Search <!--<small>beta</small>-->
+         GFZ Data Services  <!--<small>beta</small>-->
         </a>
-        <div id="query">
-          #parse("ui/query.vm")
+        <div class="doidbbox">
+            <div class="doidbtitle">DOIDB Metadata Search:</div>
+            <div id="query">
+              #parse("ui/query.vm")
+            </div>
         </div>
       </div>
       </div>
