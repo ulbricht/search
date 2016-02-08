@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-    <ShortName>DOIDB</ShortName>
-    <LongName>DOIDB Metadata Search</LongName>
-    <Description>Search in DOIDB Metadata Catalogue</Description>
+    <ShortName>GFZ Data Services</ShortName>
+    <LongName>GFZ Data Services Metadata Search</LongName>
+    <Description>Search in GFZ Data Services Metadata Catalogue</Description>
     <Tags>search</Tags>
     <Contact>ulbricht@gfz-potsdam.de</Contact>
     <Url type="text/html"
-        template="http://doidb.wdc-terra.org/search/ui?q={searchTerms}" />
+        template="http://doidb.wdc-terra.org/search/public/ui?q={searchTerms}" />
 <!--
     <Image height="16" width="16" type="image/vnd.microsoft.icon">
         http://search.datacite.org/resources/img/favicon.ico

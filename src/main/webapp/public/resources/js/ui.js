@@ -42,12 +42,12 @@ dialog = {
 
 dialog.help = new Dialog;
 dialog.help.load = function() { 
-	this.div.load_sync("help.html #content").modalDialog("DOIDB Metadata Search Help");
+	this.div.load_sync("help.html #content").modalDialog("Metadata Search Help");
 };
 
 dialog.advanced = new Dialog;
 dialog.advanced.load = function() {
-	this.div.load_sync("ui-advanced form").modalDialog("DOIDB Metadata Advanced Search", true, true);
+	this.div.load_sync("ui-advanced form").modalDialog("Metadata Advanced Search", true, true);
 	advanced.init_for_dialog();
 };
 

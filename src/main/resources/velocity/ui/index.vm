@@ -24,7 +24,7 @@
           <!--
 		<img src="resources/img/dc-logo.gif" alt="DataCite Logo"/>
 	-->
-         DOIDB Metadata Search <!--<small>beta</small>-->
+         GFZ Data Services: Metadata Search <!--<small>beta</small>-->
         </a>
         <div id="query">
           #parse("ui/query.vm")
