@@ -128,6 +128,17 @@ function get_lens() {
 	return $("#lens").attr("href");
 }
 
+function get_sort() {
+     var args = document.location.search.substring(1).split('&');
+     var i=0;
+     for (i=0;i<args.length;i++){
+         if (args[i].match(/sort=(.+)/)){
+		 return "&"+args[i];
+         }
+     } 	
+     return "";
+}
+
 function get_lens_without_q() {
 	return $("#lens_without_q").attr("href");
 }
@@ -165,7 +176,7 @@ function throbber() {
 function submit_query() {
 	var q = $("#query_input").val();
 	if (q != "") {
-		url = get_lens_without_q() + "&q=" + encodeURIComponent(q);
+		url = get_lens_without_q() + get_sort() + "&q=" + encodeURIComponent(q);
 		load_results(url);
 	}
 }
