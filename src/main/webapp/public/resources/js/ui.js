@@ -18,10 +18,89 @@ function init() {
 	
 	process_results();
 	
+	$(document).delegate("span.abstract","click", function(){	
+		$(this).find("span.abstractmore").toggle();		
+	});
+	
 	// fix for #57
 	if (History.getHash())
 		History.Adapter.trigger(window,'statechange');
 }
+
+function setupmap(){
+	
+	$('.map').not('.map-processed').each(function(idx, elem){	
+
+		$(elem).addClass("map-processed");  //do this once
+		
+		var data=JSON.parse($(elem).attr("data"));
+		
+		if (data.length<1){
+			$(elem).hide();
+			$(elem).closest(".doc").css("padding-bottom","20px");			
+			$(elem).closest(".doc").css("min-height","0px");
+			return;
+		}
+		
+		var map=L.map(elem,{ zoomControl:false }).setView([0,0],0);	
+		L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		    subdomains: ['a','b','c']
+		}).addTo( map );		
+		
+
+		
+		$.each(data, function(idx,box){
+			if (box.length==2){ //marker
+				var lat=box[1];
+				var lon=box[0];		
+				L.marker([lat,lon]).addTo(map);
+			}else if (box.length==4){ //bbox+marker
+				var minlat=box[1];
+				var maxlat=box[3];
+				var minlon=box[0];
+				var maxlon=box[2];
+				
+				if (maxlon-minlon >= 360){
+					minlon=-180;
+					maxlon=180;
+				}
+				if (maxlat-minlat >= 180){
+					minlat=-90;
+					maxlat=90;					
+				}
+				
+				
+				var lat=minlat+(maxlat-minlat)/2;
+				var lon=minlon+(maxlon-minlon)/2;
+				if (maxlat-minlat<4 && maxlon-minlon<4)
+					L.marker([lat,lon]).addTo(map);
+				L.polygon([[minlat,minlon],[minlat,maxlon],[maxlat,maxlon],[maxlat,minlon]]).addTo(map);
+			}
+		});
+	
+	});	
+
+}
+
+function setupabstract(){
+	$('.abstract').not('.abstract-processed').each(function(idx, elem){	
+
+		$(elem).addClass("abstract-processed"); //do this once
+		
+		var data=$(elem).text();
+		if (data.length<600)
+			return;
+		var visible=data.substring(0,600);
+		var hidden=data.substring(600);
+		var html=visible+'<span class="abstractmore" style="color:#0084B9">... more...</span><span class="abstractmore" style="display:none">'+hidden+'</span>';
+		$(elem).html(html);
+
+	});		
+	
+}
+
+
 
 Dialog = function() {
 	this.div = $("<div>");
@@ -300,6 +379,8 @@ function process_docs() {
 		$(".exp", score).slideToggle();
 		return false;
 	});
+	setupmap();
+	setupabstract();
 }
 
 var facet_state = new Array();
@@ -418,7 +499,7 @@ var options = {
 	opts : new Array(),
 	init : function() {
 		this.add("instant", false, null, "Instant Search", "load results immediately without clicking 'search' button");
-		this.add("continous", false, reload_results_from_beginning, "Continous Scrolling", "load next results automatically when hitting the bottom of the page");
+		this.add("continous", true, reload_results_from_beginning, "Continous Scrolling", "load next results automatically when hitting the bottom of the page");
 		this.add("filter_preview", false, null, "Filter Preview", "show preview of filter on mouse hover");
 		options.menu.init();
 	},

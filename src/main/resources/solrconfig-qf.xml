@@ -11,6 +11,8 @@
   <!-- MDS fields -->
   allocator datacentre prefix
 
+  geo
+  
   <!-- not used by default:
   indexed uploaded dataset_id refQuality
   -->

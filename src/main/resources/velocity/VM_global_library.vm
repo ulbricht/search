@@ -40,6 +40,20 @@
    #end
 #end
 
+#macro(geoinfo $doc)
+[
+#set ($i=0)
+#foreach($v in $doc.getFieldValues('geo'))
+#if ($i>0),#end
+[#tokenize_geoinfo($v)]
+#set ($i=$i+1)
+#end
+]
+#end
+
+#macro(tokenize_geoinfo $info)$info.replaceAll("^\s","").replaceAll("\s$","").replaceAll("\s+",",").replaceAll("\+","")#end
+
+
 ## escape method especially for href attribute
 #macro(esc $txt)$txt.replaceAll("&", "&amp;").replaceAll("\"", "&quot;")#end
 

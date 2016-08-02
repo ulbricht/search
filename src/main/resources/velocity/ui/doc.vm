@@ -1,6 +1,9 @@
 #set($id = $doc.getFieldValue('dataset_id'))
+
 <div id="#result_id($doc)" class="doc">
+
   <div class="stats">
+
     <div class="count">
       #set($count = $response.results.indexOf($doc) + $page.start + 1)
       # $count
@@ -16,6 +19,8 @@
       #end
     </div>
   </div>
+
+
 
   <div class="title">
 
@@ -53,15 +58,20 @@
   </div>
 
   <div class="short">
+
     #field_et_al("creator",5)
     #if(! $doc.getFieldValue("has_metadata"))
       [no metadata registered]
-    #end
+    #end  
+    <div>
+	<div class="map" style="height:150px;width:220px;float:left;margin-top:5px;margin-right:5px;margin-bottom:5px;" data="#geoinfo($doc)"></div>  
+	<div> <u>Abstract:</u><span class="abstract"> #field_br("description")</span></div>
+    </div>
   </div>
   <div class="full"></div>
-  <div class="hl">
+  <div class="hl"> 
     #if($request.params.q != "*")
-      #parse("ui/hl.vm")
+     #parse("ui/hl.vm")
     #end
   </div>
 </div>

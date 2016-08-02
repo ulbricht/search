@@ -119,20 +119,30 @@
             <field column="rightsURI" xpath="//rights/@rightsURI" trim="true" />
             <field column="description" xpath="//description" trim="true" />
             <field column="descriptionType" xpath="//description/@descriptionType" />
+
+	    
+    
           </entity>
+
+
+        <entity name="geopoint" dataSource="field" dataField="dataset.xml"
+            forEach="/resource/geoLocations/geoLocation/geoLocationPoint" processor="XPathEntityProcessor" onError="continue"
+            transformer="org.datacite.search.handler.dataimport.GeoTransformer">
+	    <field column="geo" xpath="/resource/geoLocations/geoLocation/geoLocationPoint" geotrans="true" />
+       </entity>
+
+        <entity name="geobox" dataSource="field" dataField="dataset.xml"
+            forEach="/resource/geoLocations/geoLocation/geoLocationBox" processor="XPathEntityProcessor" onError="continue"
+            transformer="org.datacite.search.handler.dataimport.GeoTransformer">
+	    <field column="geo" xpath="/resource/geoLocations/geoLocation/geoLocationBox" geotrans="true" />	
+       </entity>
+
+
         </entity>
       </entity>
-<!-- 
-      <entity name="if_dif" hasField="dataset.has_dif" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
-      <entity name="dif" dataSource="db"  query="SELECT dif FROM metadata WHERE id = '${dataset.metadata_id}' ">
-      </entity>
-      </entity>
-
-      <entity name="if_iso" hasField="dataset.has_iso" processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
-      <entity name="iso" dataSource="db"  query="SELECT iso FROM metadata WHERE id = '${dataset.metadata_id}' ">
-      </entity>
-      </entity>
--->
+      
+      
+      
       <entity name="if_media" hasField="dataset.has_media"
         processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
         <entity name="media" dataSource="db"
