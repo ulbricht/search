@@ -1,4 +1,21 @@
 #if($page.results_found > 0)
+  <h2>Spatial Filter</h2>
+  <div class="searchmap" style="width:230px;height:150px"></div>
+  <div>
+  <table>
+	<tr> <td style="vertical-align:middle">South:</td>
+	     <td><input style="width:50px" id="minlat" type="text"/></td>
+	     <td style="vertical-align:middle">North:</td>
+	     <td><input style="width:50px" id="maxlat" type="text"/></td>
+	</tr>
+	<tr>
+	     <td style="vertical-align:middle">West:</td>
+	     <td><input style="width:50px" id="minlon" type="text"/></td>
+	     <td style="vertical-align:middle">East:</td>
+	     <td><input style="width:50px" id="maxlon" type="text"/></td>
+	</tr>
+  </table>
+  </div>
   <h2>Filter</h2>
 #end
 #parse('ui/facet_fields.vm')  

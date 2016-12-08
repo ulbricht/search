@@ -98,6 +98,9 @@
             <field column="resourceTypeGeneral" xpath="//resourceType/@resourceTypeGeneral" />
             <field column="resourceType" xpath="//resourceType" trim="true" />
 
+            <field column="type" xpath="//resourceType" trim="true" />
+            <field column="type" xpath="//resourceType/@resourceTypeGeneral" />
+
             <field column="ignored_alternateIdentifier_type" xpath="//alternateIdentifier/@alternateIdentifierType" />
             <field column="ignored_alternateIdentifier" xpath="//alternateIdentifier" trim="true" />
             <field column="alternateIdentifier" keys="ignored_alternateIdentifier_type" values="ignored_alternateIdentifier" />
@@ -123,6 +126,19 @@
 	    
     
           </entity>
+
+          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+            transformer="org.datacite.search.handler.dataimport.ScienceKeywordsTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+            <field column="category" xpath="//keyword/CharacterString" trim="true" sciencekeytrans="true" position="2" />
+          </entity>
+
+          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+            transformer="org.datacite.search.handler.dataimport.ScienceKeywordsTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+            <field column="classification" xpath="//keyword/CharacterString" trim="true" sciencekeytrans="true" position="3" />
+          </entity>
+
 
 
         <entity name="geopoint" dataSource="field" dataField="dataset.xml"

@@ -1,3 +1,11 @@
+# DOIDB Search
+
+DOIDB Search is a modified version of the DataCite Search software. The original software has been modified to index and query spatial coverages. The DOIDB makes use of Leaflet to render maps and to select bounding boxes. Leaflet is not shipped with this source code and is expected in the directory src/main/webapp/public/resources/js/. Please clone Leaflet from GitHub (https://github.com/Leaflet/Leaflet.draw) into this directory.
+
+DOIDB Search allows to search metadata collected through https://github.com/ulbricht/mds/tree/doidb, which is a modified version of the DataCite Metadata store source code and has been extended to keep metadata in the schemas ISO19139 and GCMD NASA DIF.
+
+The README of the original DataCite Search software contains additional information about installation - the content of the README follows below.
+
 # DataCite Search
 
 This is Search for metadata uploaded to DataCite's Metadata Store ([MDS](https://mds.datacite.org)).

@@ -12,6 +12,8 @@
   allocator datacentre prefix
 
   geo
+
+  category classification
   
   <!-- not used by default:
   indexed uploaded dataset_id refQuality

@@ -49,6 +49,16 @@
       </analyzer>
     </fieldType>
 
+
+
+    <fieldType name="sciencekeyword" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+      <analyzer>
+        <tokenizer class="solr.PatternTokenizerFactory" pattern=" &gt; "/>
+	<filter class="solr.LengthFilterFactory" min="2" max="50"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/> 
 
     <!-- lowercases the entire field value, keeping it as a single token.  -->
@@ -181,7 +191,12 @@
    <field name="xml" type="binary" indexed="false" stored="true"/>
    <field name="namespace" type="string" indexed="true" stored="true"/>
    <field name="schema_version" type="string" indexed="true" stored="true"/>
- 
+
+
+
+   <field name="type" type="sciencekeyword" indexed="true" stored="true"  multiValued="true"/>
+   <field name="category" type="sciencekeyword" indexed="true" stored="true" multiValued="true"/>
+   <field name="classification" type="sciencekeyword" indexed="true" stored="true" multiValued="true"/>
    <field name="geo" type="location_rpt" indexed="true" stored="true" multiValued="true"/>
    
    <field name="dif" type="binary" indexed="false" stored="true"/>
@@ -235,7 +250,7 @@
  <copyField source="resourceTypeGeneral" dest="resourceType_facet"/>
  <copyField source="datacentre" dest="datacentre_facet"/>
  <copyField source="allocator" dest="allocator_facet"/>
- <copyField source="creator" dest="creator_facet"/>
+ <copyField source="creator" dest="author_facet"/>
  <copyField source="publisher" dest="publisher_facet"/>
  <copyField source="contributor" dest="contributor_facet"/>
  <copyField source="subject" dest="subject_facet"/>

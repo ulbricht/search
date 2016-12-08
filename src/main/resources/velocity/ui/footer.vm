@@ -5,7 +5,7 @@
 #set($rows = $page.start + $page.results_per_page)
 #macro(api)api#url_for_lens()&fl=doi,creator,title,publisher,publicationYear,datacentre&fq=is_active:true&fq=has_metadata:true&rows=$rows#end
 <span>API Query : 
-  <a class="api"href="#api#sort&wt=xml&indent=true">xml</a>,
+  <a class="api" href="#api#sort&wt=xml&indent=true">xml</a>,
   <a class="api" href="#api#sort&wt=json&indent=true">json</a>,
   <a class="api" href="#api#sort&wt=csv">csv</a>
 </span>

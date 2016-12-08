@@ -27,6 +27,90 @@ function init() {
 		History.Adapter.trigger(window,'statechange');
 }
 
+
+
+
+function setupsearchmap(){
+	
+	$('.searchmap').each(function(idx, elem){
+
+
+		var minlat=maxlat=minlon=maxlon=false;
+		$('.filter').each(function(idx,e){
+
+			if ($(e).find('.name').text()=='geo'){
+				var val=$(e).find('.value').text().trim();
+				var m=val.match(/\[(.+),(.+)\ TO\ (.+),(.+)\]/);
+				if (m) {
+					minlat=m[1];maxlat=m[3];
+					minlon=m[2];maxlon=m[4];
+					$('#minlat').val(m[1]);
+					$('#maxlat').val(m[3]);
+					$('#minlon').val(m[2]);
+					$('#maxlon').val(m[4]);
+
+				}				
+			}
+
+
+
+		});
+	
+
+		//setup map & draw layer
+		var map=L.map(elem,{ zoomControl:false }).setView([0,0],0);	
+		L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		    subdomains: ['a','b','c']
+		}).addTo( map );
+
+
+		var drawnItems = new L.FeatureGroup();
+		map.addLayer(drawnItems);
+
+		//draw bounds from query string
+		if (minlat!=false && maxlat!=false && minlon!=false && maxlon!=false){
+			var bounds = [[minlat, minlon], [maxlat, maxlon]];
+			var rect=L.rectangle(bounds).addTo(map);
+			drawnItems.addLayer(rect);
+		}
+
+		//setup draw control
+		var drawControl = new L.Control.Draw({
+			position: 'topright',
+			draw: {
+				polygon: false,
+				polyline: false,
+				rect: {
+					shapeOptions: {
+						color: 'red'
+					},
+				},
+				circle: false,
+				marker: false,
+			},
+			edit: false
+		});
+		map.addControl(drawControl);
+
+		map.on('draw:created', function (e) {
+
+			var layer = e.layer;
+			var bounds=layer.getBounds();
+			$('#minlat').val(bounds.getSouth());
+			$('#maxlat').val(bounds.getNorth());
+			$('#minlon').val(bounds.getWest());
+			$('#maxlon').val(bounds.getEast());
+
+			drawnItems.clearLayers();
+			drawnItems.addLayer(layer);
+submit_query();
+		});
+	});	
+
+}
+
+
 function setupmap(){
 	
 	$('.map').not('.map-processed').each(function(idx, elem){	
@@ -46,9 +130,7 @@ function setupmap(){
 		L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 		    subdomains: ['a','b','c']
-		}).addTo( map );		
-		
-
+		}).addTo( map );
 		
 		$.each(data, function(idx,box){
 			if (box.length==2){ //marker
@@ -60,16 +142,6 @@ function setupmap(){
 				var maxlat=box[3];
 				var minlon=box[0];
 				var maxlon=box[2];
-				
-				if (maxlon-minlon >= 360){
-					minlon=-180;
-					maxlon=180;
-				}
-				if (maxlat-minlat >= 180){
-					minlat=-90;
-					maxlat=90;					
-				}
-				
 				
 				var lat=minlat+(maxlat-minlat)/2;
 				var lon=minlon+(maxlon-minlon)/2;
@@ -248,6 +320,20 @@ function throbber() {
  	return $('<img src="resources/img/throbber-transparent.gif" class="loading" alt="spinning wheel"/>');
 }
 
+function geospatial(){
+
+	var minlat=$('#minlat').val();
+ 	var maxlat=$('#maxlat').val();
+	var minlon=$('#minlon').val();
+	var maxlon=$('#maxlon').val();
+
+	if (isNaN(parseFloat(minlat)) || isNaN(parseFloat(maxlat)) || isNaN(parseFloat(minlon)) || isNaN(parseFloat(maxlon))) 
+		return "";
+	else 
+		return "&fq=geo:["+minlat+","+minlon+"+TO+"+maxlat+","+maxlon+"]"
+}
+
+
 /******************
  * functions for loading content
  ******************/
@@ -255,7 +341,11 @@ function throbber() {
 function submit_query() {
 	var q = $("#query_input").val();
 	if (q != "") {
-		url = get_lens_without_q() + get_sort() + "&q=" + encodeURIComponent(q);
+
+		var lens=get_lens_without_q();
+		lens=lens.replace(/&fq=geo%3A%5B.+%5D/,"");
+		url =  lens + geospatial() + get_sort() + "&q=" + encodeURIComponent(q);
+
 		load_results(url);
 	}
 }
@@ -297,7 +387,8 @@ function load_main(query) {
 }
 
 function load_detail(doc) {
-	var doi = $(".info span.doi", doc).text();
+	var doi = $(".title a", doc).first().attr("href");
+	doi=doi.replace("http://dx.doi.org/","");
 	var detail = $(".full",doc);
 	if (detail.text().length == 0) { // not already loaded
 		detail.load("ui-detail", {
@@ -341,6 +432,7 @@ function process_results() {
 	process_filters();
 	process_oailink();
 	pagination.process();
+	setupsearchmap();
 	if (options.get("continous"))
 		makeFooterSticky();
 	check_page_layout();
@@ -379,6 +471,7 @@ function process_docs() {
 		$(".exp", score).slideToggle();
 		return false;
 	});
+
 	setupmap();
 	setupabstract();
 }
@@ -601,12 +694,15 @@ pagination.next_page = {
 		this.loading = true;
 		$("#next_page_loading").show();
 
+		var sorting=get_sort().substr(6).replace("+"," ");
+
 		$.ajax({
 			type  : "GET",
 			url : get_lens(),
 			data :  {
 				"v.template" : "ui/docs",
 				facet: "off",
+				sort: sorting,
 				start : $(".doc").length
 			}, 
 			cache: false,

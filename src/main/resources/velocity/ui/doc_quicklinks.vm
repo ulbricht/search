@@ -1,7 +1,9 @@
 <a href='http://hdl.handle.net/#f("doi")?noredirect'>Handle</a>
 &nbsp;|&nbsp;
-<a href="#esc("http://oai.datacite.org/oai?verb=GetRecord&metadataPrefix=oai_datacite&identifier=oai:oai.datacite.org"):#f("dataset_id")">OAI</a>
+<a href="#esc("http://doidb.wdc-terra.org/oaip/oai?verb=GetRecord&metadataPrefix=oai_datacite&identifier=oai:oai.datacite.org"):#f("dataset_id")">OAI</a>
 &nbsp;|&nbsp;
+<!--
 <a href='http://data.datacite.org/#f("doi")'>Content Service</a>
 &nbsp;|&nbsp;
-<a href='https://mds.datacite.org/datasets/#f("dataset_id")'>MDS</a>
+-->
+<a href='https://doidb.wdc-terra.org/mds/datasets/#f("dataset_id")'>MDS</a>

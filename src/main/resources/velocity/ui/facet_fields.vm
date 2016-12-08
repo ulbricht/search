@@ -29,7 +29,7 @@
               #set($name = $arr.get(2))
               <li title="$esc.html($name)">
                 <a href="#url_for_facet_filter($field.name, $facet.name)">
-                  <span class="value" title="$esc.html($name)">$esc.html($symbol)</span>
+                  <span class="value" title="$esc.html($name)">$esc.html($name)</span>
                   <span class="count">($facet.count)</span>
                 </a>
               </li>

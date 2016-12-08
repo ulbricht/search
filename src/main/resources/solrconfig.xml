@@ -637,6 +637,10 @@
        queries across multiple shards
     -->
   <requestHandler name="/select" class="solr.SearchHandler">
+     <lst name="defaults">
+       <str name="defType">edismax</str>
+       <xi:include href="solrconfig-qf.xml"/>
+     </lst>
   </requestHandler>
     
   <requestHandler name="/public/ui" class="solr.SearchHandler">
@@ -652,10 +656,13 @@
        <int name="facet.mincount">1</int>
        <int name="facet.limit">6</int>
        <bool name="facet.missing">true</bool>
-       <str name="facet.field">datacentre_facet</str>
+       <str name="facet.field">category</str>    
+       <str name="facet.field">classification</str>    
        <str name="facet.field">subject</str>       
-       <str name="facet.field">resourceType_facet</str>
-       <str name="facet.field">creator_facet</str>
+<!--       <str name="facet.field">resourceType_facet</str>-->
+       <str name="facet.field">type</str>
+       <str name="facet.field">author_facet</str>
+       <str name="facet.field">datacentre_facet</str>
        <str name="facet.field">publicationYear</str>
        <str name="facet.field">publisher_facet</str>
        <str name="facet.field">language_facet</str>
