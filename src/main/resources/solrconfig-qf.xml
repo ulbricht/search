@@ -14,6 +14,8 @@
   geo
 
   category classification
+
+  sciencekeywordtree
   
   <!-- not used by default:
   indexed uploaded dataset_id refQuality

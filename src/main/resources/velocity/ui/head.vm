@@ -33,9 +33,7 @@ if ( typeof window.JSON === 'undefined' ) {
 <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
 
 <script src="resources/js/Leaflet.draw/src/Leaflet.draw.js"></script>
-<script src="resources/js/Leaflet.draw/src/Leaflet.Draw.Event.js"></script>
-
-<link rel="stylesheet" href="resources/js/Leaflet.draw/src/leaflet.draw.css" />
+<link rel="stylesheet" href="resources/js/Leaflet.draw/dist/leaflet.draw.css" />
 
 <script src="resources/js/Leaflet.draw/src/Toolbar.js"></script>
 <script src="resources/js/Leaflet.draw/src/Tooltip.js"></script>
@@ -68,7 +66,6 @@ if ( typeof window.JSON === 'undefined' ) {
 <script src="resources/js/Leaflet.draw/src/edit/handler/Edit.Circle.js"></script>
 <script src="resources/js/Leaflet.draw/src/edit/handler/Edit.Rectangle.js"></script>
 <script src="resources/js/Leaflet.draw/src/edit/handler/Edit.Marker.js"></script>
-
 
 
 

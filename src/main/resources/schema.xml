@@ -59,6 +59,14 @@
       </analyzer>
     </fieldType>
 
+    <fieldType name="sciencekeywordtree" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+      <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+	<filter class="solr.LengthFilterFactory" min="2" max="1000"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/> 
 
     <!-- lowercases the entire field value, keeping it as a single token.  -->
@@ -197,6 +205,7 @@
    <field name="type" type="sciencekeyword" indexed="true" stored="true"  multiValued="true"/>
    <field name="category" type="sciencekeyword" indexed="true" stored="true" multiValued="true"/>
    <field name="classification" type="sciencekeyword" indexed="true" stored="true" multiValued="true"/>
+   <field name="sciencekeywordtree" type="sciencekeywordtree" indexed="true" stored="true" multiValued="true"/>
    <field name="geo" type="location_rpt" indexed="true" stored="true" multiValued="true"/>
    
    <field name="dif" type="binary" indexed="false" stored="true"/>
