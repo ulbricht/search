@@ -67,7 +67,7 @@
       </analyzer>
     </fieldType>
 
-    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/> 
+    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/>
 
     <!-- lowercases the entire field value, keeping it as a single token.  -->
     <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
@@ -183,6 +183,8 @@
 
    <field name="nameIdentifier" type="identifiers" indexed="true" stored="true" multiValued="true"/>
 
+   <field name="affiliation" type="lowercase" indexed="true" stored="true" multiValued="true"/>
+   <field name="doisearch" type="lowercase" indexed="true" stored="true" multiValued="true"/>
 
    <!-- MDS fields -->
    <field name="allocator" type="text" indexed="true" stored="true"/>
@@ -207,7 +209,7 @@
    <field name="classification" type="sciencekeyword" indexed="true" stored="true" multiValued="true"/>
    <field name="sciencekeywordtree" type="sciencekeywordtree" indexed="true" stored="true" multiValued="true"/>
    <field name="geo" type="location_rpt" indexed="true" stored="true" multiValued="true"/>
-   
+
    <field name="dif" type="binary" indexed="false" stored="true"/>
    <field name="iso" type="binary" indexed="false" stored="true"/>
 

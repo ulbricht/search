@@ -15,18 +15,18 @@
                     CONCAT(dc.symbol, ' - ', dc.name) AS datacentre,
                     al.symbol AS allocator_symbol,
                     CONCAT(al.symbol, ' - ', al.name) AS allocator,
-                    IF(d.is_active, m.xml, NULL) as xml,
-                    m.xml IS NOT NULL as has_metadata,
-                    m.id as metadata_id,
-		    IF(d.is_active, m.dif, NULL) as dif,			    
-                    m.dif IS NOT NULL as has_dif,
-                    IF(d.is_active, m.iso, NULL) as iso,			    
-                    m.iso IS NOT NULL as has_iso,
+                    IF(d.is_active, ANY_VALUE(m.xml), NULL) as xml,
+                    ANY_VALUE(m.xml) IS NOT NULL as has_metadata,
+                    ANY_VALUE(m.id) as metadata_id,
+		    IF(d.is_active, ANY_VALUE(m.dif), NULL) as dif,			    
+                    ANY_VALUE(m.dif) IS NOT NULL as has_dif,
+                    IF(d.is_active, ANY_VALUE(m.iso), NULL) as iso,			    
+                    ANY_VALUE(m.iso) IS NOT NULL as has_iso,
                     d.created AS created,
                     d.minted AS minted,
                     MIN(mm.created) AS uploaded,
-                    CAST(GREATEST(d.updated, IFNULL(m.created,0)) AS DATETIME) AS updated,
-                    m.namespace,
+                    CAST(GREATEST(d.updated, IFNULL(ANY_VALUE(m.created),0)) AS DATETIME) AS updated,
+                    ANY_VALUE(m.namespace),
                     d.is_ref_quality AS refQuality,
                     mt.dataset IS NOT NULL AS has_media,
                     d.is_active
@@ -83,6 +83,7 @@
             forEach="/resource" processor="XPathEntityProcessor" onError="skip"
             transformer="org.datacite.search.handler.dataimport.KeyValueTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
 
+            <field column="doisearch" xpath="//identifier" trim="true" />
             <field column="title" xpath="//title" trim="true" />
             <field column="titleType" xpath="//title/@titleType"/>
             <field column="creator" xpath="//creatorName" trim="true" />
@@ -97,6 +98,8 @@
             <field column="language" xpath="//language" trim="true" />
             <field column="resourceTypeGeneral" xpath="//resourceType/@resourceTypeGeneral" />
             <field column="resourceType" xpath="//resourceType" trim="true" />
+
+            <field column="affiliation" xpath="//affiliation" trim="true" />
 
             <field column="type" xpath="//resourceType" trim="true" />
             <field column="type" xpath="//resourceType/@resourceTypeGeneral" />
@@ -122,10 +125,10 @@
             <field column="rightsURI" xpath="//rights/@rightsURI" trim="true" />
             <field column="description" xpath="//description" trim="true" />
             <field column="descriptionType" xpath="//description/@descriptionType" />
-
-	    
-    
           </entity>
+
+        <entity name="if_hasiso" hasField="dataset.has_iso"
+          processor="org.datacite.search.handler.dataimport.ConditionalEntityProcessor">
 
           <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
             forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
@@ -133,67 +136,74 @@
             <field column="category" xpath="//keyword/CharacterString" trim="true" sciencekeytrans="true" position="2" />
           </entity>
 
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordsTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="classification" xpath="//keyword/CharacterString" trim="true" sciencekeytrans="true" position="3" />
-          </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordsTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="classification" xpath="//keyword/CharacterString" trim="true" sciencekeytrans="true" position="3" />
+		  </entity>
 
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="1"/>
-          </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="1"/>
+		  </entity>
 
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="2"/>
-          </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="2"/>
+		  </entity>
 
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="3"/>
-          </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="3"/>
+		  </entity>
 
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="4"/>
-          </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="4"/>
+		  </entity>
 
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="5"/>
-          </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="5"/>
+		  </entity>
 
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="6"/>
-          </entity>
-          <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
-            forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
-            <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="7"/>
-          </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="6"/>
+		  </entity>
+		  <entity name="sciencekeywords" dataSource="field" dataField="dataset.iso"
+		    forEach="/MD_Metadata/identificationInfo/MD_DataIdentification/" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.ScienceKeywordTreeTransformer,org.datacite.search.handler.dataimport.TrimTransformer">
+		    <field column="sciencekeywordtree" xpath="//keyword/CharacterString" trim="true" sciencekeytreetrans="true" position="7"/>
+		  </entity>
 
+         </entity>
+	<!--
+		<entity name="geopoint" dataSource="field" dataField="dataset.xml" 
+		    forEach="/resource/geoLocations/geoLocation/geoLocationPoint" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.TrimTransformer,org.datacite.search.handler.dataimport.GeoTransformer">
+		    <field column="geo" xpath="/resource/geoLocations/geoLocation/geoLocationPoint" geotrans="true" />
+	       </entity>
 
+		<entity name="geobox" dataSource="field" dataField="dataset.xml"
+		    forEach="/resource/geoLocations/geoLocation/geoLocationBox" processor="XPathEntityProcessor" onError="continue"
+		    transformer="org.datacite.search.handler.dataimport.TrimTransformer,org.datacite.search.handler.dataimport.GeoTransformer">
+		    <field column="geo" xpath="/resource/geoLocations/geoLocation/geoLocationBox" geotrans="true" />	
+	       </entity>
+-->
 
-        <entity name="geopoint" dataSource="field" dataField="dataset.xml"
-            forEach="/resource/geoLocations/geoLocation/geoLocationPoint" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.GeoTransformer">
-	    <field column="geo" xpath="/resource/geoLocations/geoLocation/geoLocationPoint" geotrans="true" />
+ 
+
+        <entity name="geo" dataSource="field" dataField="dataset.xml"
+             processor="GeoLocationsProcessor" onError="continue">
+	    <field column="geo"  />	
        </entity>
-
-        <entity name="geobox" dataSource="field" dataField="dataset.xml"
-            forEach="/resource/geoLocations/geoLocation/geoLocationBox" processor="XPathEntityProcessor" onError="continue"
-            transformer="org.datacite.search.handler.dataimport.GeoTransformer">
-	    <field column="geo" xpath="/resource/geoLocations/geoLocation/geoLocationBox" geotrans="true" />	
-       </entity>
-
 
         </entity>
       </entity>
