@@ -16,6 +16,7 @@
       #end
     </div>
   </div>
+
   <div class="title">
 
     <a target="_top" href="http://hdl.handle.net/#esc_doi("#f('doi')")">Sample #f("doi")</a>
@@ -29,18 +30,18 @@
   <span class="info">
 
 	#if($doc.containsKey("iso") && $doc.getFieldValue("iso") != "")
-    		<a target="_top" class="doi" href="http://doidb.wdc-terra.org/igsnoaip/oai?verb=GetRecord&metadataPrefix=iso19139&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")"> ISO19139(INSPIRE) </a>
+    		<a target="_top" style="display:none" class="doi" href="http://doidb.wdc-terra.org/igsnaaoaip/oai?verb=GetRecord&metadataPrefix=iso19139&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")"> ISO19139(INSPIRE) </a>
 	#else
 		#if ($doc.containsKey("dif") && $doc.getFieldValue("dif") != "")
-    		<a target="_top" class="doi" href="http://doidb.wdc-terra.org/igsnoaip/oai?verb=GetRecord&metadataPrefix=iso19139&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")"> ISO19139(DIF-converted) </a>
+    		<a target="_top" style="display:none" class="doi" href="http://doidb.wdc-terra.org/igsnaaoaip/oai?verb=GetRecord&metadataPrefix=iso19139&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")"> ISO19139(DIF-converted) </a>
 		#end
 
 	#end
 	#if($doc.containsKey("dif") && $doc.getFieldValue("dif") != "")
-    		<a target="_top" class="doi" href="http://doidb.wdc-terra.org/igsnoaip/oai?verb=GetRecord&metadataPrefix=dif&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")"> DIF </a>
+    		<a target="_top" style="display:none" class="doi" href="http://doidb.wdc-terra.org/igsnaaoaip/oai?verb=GetRecord&metadataPrefix=dif&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")"> DIF </a>
 	#end
    #if($doc.getFieldValue('has_metadata'))
-	<a target="_top" class="doi" href="http://doidb.wdc-terra.org/igsnoaip/oai?verb=GetRecord&metadataPrefix=igsn&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")">IGSN metadata</a>
+	<a target="_top" class="doi" href="/igsnaaoaip/oai?verb=GetRecord&metadataPrefix=igsngfz&identifier=oai:gfzaa.igsn.org:#esc_doi("#f('dataset_id')")">IGSN metadata</a>
 	#end
 
   </span>
@@ -48,8 +49,12 @@
 
 
   </div>
+
   <div class="short">
     #field_et_al("creator",5)
+    #if(! $doc.getFieldValue("has_metadata"))
+      [no metadata registered]
+    #end
   </div>
   <div class="full"></div>
   <div class="hl">
