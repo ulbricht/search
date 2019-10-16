@@ -213,6 +213,9 @@
    <field name="dif" type="binary" indexed="false" stored="true"/>
    <field name="iso" type="binary" indexed="false" stored="true"/>
 
+   <field name="startdate" type="date" indexed="false" stored="true" multiValued="true"/>
+   <field name="enddate" type="date" indexed="false" stored="true" multiValued="true"/>
+
    <field name="media" type="identifiers" indexed="true" stored="true" multiValued="true"/>
 
    <field name="allocator_facet" type="string" indexed="true" stored="true"/>
@@ -266,5 +269,6 @@
  <copyField source="contributor" dest="contributor_facet"/>
  <copyField source="subject" dest="subject_facet"/>
  <copyField source="language" dest="language_facet"/>
+ <copyField source="format" dest="format_facet"/>
 
 </schema>
