@@ -41,7 +41,7 @@
              LEFT JOIN media AS mt ON mt.dataset = d.id
              JOIN datacentre AS dc ON d.datacentre = dc.id
              JOIN allocator AS al ON dc.allocator = al.id
-             WHERE d.doi not like '20.500.11812%'
+             WHERE d.doi not like '${dataimporter.request.testprefix}/%'
                AND d.minted IS NOT NULL
                AND ( '${dataimporter.request.clean}' != 'false'
                      OR GREATEST(d.updated,
