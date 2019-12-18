@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  search:
+    environment:
+      MYSQL_DATABASE: datacite
+      MYSQL_USER: datacite
+      MYSQL_PASSWORD: secret
+      SOLR_USER: admin
+      SOLR_PASSWORD: secret
+      LOG_LEVEL: DEBUG
+    image: datacite/search
+    ports:
+      - "8020:80"
+      - "17264:17264"
+    volumes:
+      - ~/.m2:/root/.m2
+      - data:/data
+  mysql:
+    environment:
+      MYSQL_DATABASE: datacite
+      MYSQL_USER: datacite
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    image: mysql:5.7
+    ports:
+      - "3307:3306"
+volumes:
+  data:
