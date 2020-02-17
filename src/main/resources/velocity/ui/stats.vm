@@ -1,6 +1,0 @@
-#if ($request.originalParams.q)
-  $page.results_found documents found in ${response.header.QTime}ms
-#else
-  query is empty
-#end
- 

@@ -1,0 +1,127 @@
+<dataConfig>
+  <dataSource name="db" type="JdbcDataSource" driver="com.mysql.cj.jdbc.Driver"
+    url="jdbc:mysql://localhost/doidb?useUnicode=true&amp;characterEncoding=UTF8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
+    user="doidb"
+    password="doidbpasswd" 
+    readonly="true" 
+    batchSize="-1" 
+    />
+  <!-- for batchSize=-1 see DIH FAQ - otherwise memory leak 
+       convertType="true"
+   -->
+  <dataSource name="field" type="FieldReaderDataSource" encoding="UTF-8" />
+ <document>
+    <!-- SOLR-2104 -->
+    <!-- using delta import as proposed in http://wiki.apache.org/solr/DataImportHandlerDeltaQueryViaFullImport -->
+    <entity name="dataset" dataSource="db"
+      query="SELECT d.doi AS doi,
+                d.id AS dataset_id,
+                dc.symbol AS datacentre_symbol,
+                CONCAT(dc.symbol, ' - ', dc.name) AS datacentre,
+                al.symbol AS allocator_symbol,
+                CONCAT(al.symbol, ' - ', al.name) AS allocator,
+
+                IF(d.is_active, m.xml, NULL) as xml,
+                CONVERT(IF(d.is_active, m.xml, NULL) USING utf8mb4) as parsexml,
+                m.xml IS NOT NULL as has_metadata,
+                
+                m.id as metadata_id,
+
+                IF(d.is_active, m.dif, NULL) as dif,
+                CONVERT(IF(d.is_active, m.dif, NULL) USING utf8mb4) as parsedif,
+                m.dif IS NOT NULL as has_dif,
+
+                IF(d.is_active, m.iso, NULL) as iso,
+                CONVERT(IF(d.is_active, m.iso, NULL) USING utf8mb4) as parseiso,
+                m.iso IS NOT NULL as has_iso,
+
+                d.created AS created,
+                d.minted AS minted,
+                MIN(mm.created) AS uploaded,
+                CAST(GREATEST(d.updated, IFNULL(m.created,0)) AS DATETIME) AS updated,
+                m.namespace,
+
+                mt.dataset IS NOT NULL AS has_media,
+                d.is_active
+             FROM dataset AS d
+                LEFT JOIN metadata AS m ON m.dataset = d.id
+    	          LEFT JOIN metadata mmax ON m.metadata_version &lt; mmax.metadata_version and m.dataset=mmax.dataset
+                LEFT JOIN metadata AS mm ON mm.dataset = d.id
+                LEFT JOIN media AS mt ON mt.dataset = d.id
+                JOIN datacentre AS dc ON d.datacentre = dc.id
+                JOIN allocator AS al ON dc.allocator = al.id
+             WHERE d.doi not like '10.5072/%'
+                AND d.minted IS NOT NULL
+	              AND mmax.id is null
+                AND ( '${dataimporter.request.clean}' != 'false'
+                     OR GREATEST(d.updated,
+                                 IFNULL(m.created,0),
+                                 IFNULL(mt.updated,0),
+                                 IFNULL(al.updated,0),
+                                 IFNULL(dc.updated,0))
+                        > '${dataimporter.last_index_time}' )
+             GROUP BY dataset_id,m.id
+            "
+      transformer="RegexTransformer">
+
+      <field column="prefix" regex="([^/]*)/" sourceColName="doi" />
+
+      <field column="schema_version" regex="-(\d+(.\d+)*)$" sourceColName="namespace" template="2.0" />
+
+      <entity name="xml" 
+              dataSource="field" dataField="dataset.parsexml"
+              forEach="/resource"
+              xsl="convdatacite.xslt"
+              processor="XPathEntityProcessor" onError="continue"
+              transformer="RegexTransformer"
+        >
+
+        <field column="namespace" template="${dataset.namespace}" />
+
+        <field column="doisearch" xpath="//identifier" />
+        <field column="title" xpath="//title" />
+        <field column="titleType" xpath="//title/@titleType"/>
+        <field column="creator" xpath="//creatorName" />
+        <field column="publisher" xpath="//publisher" />
+        <field column="publicationYear" xpath="//publicationYear" />
+        <field column="subject" xpath="//subject" />
+        <field column="subjectScheme" xpath="//subject/@subjectScheme" />
+        <field column="contributor" xpath="//contributor/contributorName" />
+        <field column="contributorType" xpath="//contributor/@contributorType" />
+        <field column="date" xpath="//date" />
+        <field column="dateType" xpath="//date/@dateType" />
+        <field column="language" xpath="//language" />
+        <field column="resourceTypeGeneral" xpath="//resourceType/@resourceTypeGeneral" />
+        <field column="resourceType" xpath="//resourceType" />
+        <field column="affiliation" xpath="//affiliation" />
+        <field column="type" xpath="//resourceType" />
+        <field column="type" xpath="//resourceType/@resourceTypeGeneral" />
+        <field column="alternateIdentifier" xpath="//alternateIdentifier" />
+        <field column="relatedIdentifier" xpath="//relatedIdentifier" />
+        <field column="nameIdentifier" xpath="//nameIdentifier" />
+        <field column="size" xpath="//size" />
+        <field column="format" xpath="//format" />
+        <field column="version" xpath="//version" />
+        <field column="rights" xpath="//rights" />
+        <field column="rightsURI" xpath="//rights/@rightsURI" />
+        <field column="description" xpath="//description" />
+        <field column="descriptionType" xpath="//description/@descriptionType" />
+        <field column="geo" xpath="//geo" />
+
+      </entity>
+
+      <entity name="iso" 
+              dataSource="field" dataField="dataset.parseiso"
+              forEach="/MD_Metadata"
+              xsl="conviso19139.xslt"
+              processor="XPathEntityProcessor" onError="continue"
+        >
+
+        <field column="sciencekeywordtree" xpath="//gcmdkeywords" />
+     
+      </entity>
+
+
+    </entity>
+  </document>
+</dataConfig>
