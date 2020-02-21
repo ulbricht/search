@@ -1,0 +1,79 @@
+<dataConfig>
+  <dataSource name="db" type="JdbcDataSource" driver="com.mysql.cj.jdbc.Driver"
+    url="jdbc:mysql://db/igsn?useUnicode=true&amp;characterEncoding=UTF8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
+    user="user"
+    password="password" 
+    readonly="true" 
+    batchSize="-1" 
+    />
+  <!-- for batchSize=-1 see DIH FAQ -->
+  <dataSource name="field" type="FieldReaderDataSource" />
+  <document>
+    <!-- SOLR-2104 -->
+    <!-- using delta import as proposed in http://wiki.apache.org/solr/DataImportHandlerDeltaQueryViaFullImport -->
+    <entity name="dataset" dataSource="db"
+      query="SELECT d.doi AS doi,
+                    d.id AS dataset_id,
+                    dc.symbol AS datacentre_symbol,
+                    CONCAT(dc.symbol, ' - ', dc.name) AS datacentre,
+                    al.symbol AS allocator_symbol,
+                    CONCAT(al.symbol, ' - ', al.name) AS allocator,
+                    IF(d.is_active, m.xml, NULL) as xml,
+                    CONVERT(IF(d.is_active, m.xml, NULL) USING utf8mb4) as parsexml,
+                    m.xml IS NOT NULL as has_metadata,
+                    m.id as metadata_id,
+                    d.created AS created,
+                    d.minted AS minted,
+                    MIN(mm.created) AS uploaded,
+                    CAST(GREATEST(d.updated, IFNULL(m.created,0)) AS DATETIME) AS updated,
+                    m.namespace,
+                    d.is_ref_quality AS refQuality,
+                    mt.dataset IS NOT NULL AS has_media,
+                    p.prefix AS prefix,
+                    d.is_active
+             FROM dataset AS d
+             LEFT JOIN metadata AS m
+               ON m.dataset = d.id
+                 AND m.metadata_version =
+                     (SELECT MAX(metadata_version) AS max_version
+                      FROM metadata AS mm
+                      WHERE mm.dataset = d.id)
+             LEFT JOIN metadata AS mm ON mm.dataset = d.id
+             LEFT JOIN media AS mt ON mt.dataset = d.id
+             JOIN datacentre AS dc ON d.datacentre = dc.id
+             JOIN allocator AS al ON dc.allocator = al.id
+             JOIN datacentre_prefixes AS dp ON dp.datacentre=dc.id
+             JOIN prefix AS p ON dp.prefixes=p.id
+             WHERE d.doi not like '20.500.11812/%'
+               AND d.minted IS NOT NULL
+               AND d.doi LIKE CONCAT(p.prefix,'%')
+               OR GREATEST(d.updated,
+                 IFNULL(m.created,0),
+                 IFNULL(mt.updated,0),
+                 IFNULL(al.updated,0),
+                 IFNULL(dc.updated,0))
+       		 > '${dataimporter.last_index_time}' )
+             GROUP BY dataset_id
+            "
+      transformer="RegexTransformer">
+
+
+          <field column="namespace" template="${dataset.namespace}" />
+          <field column="schema_version" regex="-(\d+(.\d+)*)$" sourceColName="namespace" template="2.0" />
+
+          <entity name="xml" dataSource="field" dataField="dataset.parsexml"
+            forEach="/sample" processor="XPathEntityProcessor" onError="continue"
+		xsl="convdatacite.xslt"
+            >
+
+		<field column="creator" xpath="//registrantName" trim="true" />
+		<field column="relatedIdentifier" xpath="//relatedIdentifier" />
+		<field column="nameIdentifier" xpath="//nameIdentifier" />
+          </entity>
+
+
+
+
+    </entity>
+  </document>
+</dataConfig>

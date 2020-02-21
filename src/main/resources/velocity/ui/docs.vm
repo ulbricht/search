@@ -1,3 +1,0 @@
-#foreach($doc in $response.results)
-  #parse("ui/doc.vm")
-#end
