@@ -22,17 +22,17 @@
                 CONCAT(al.symbol, ' - ', al.name) AS allocator,
 
                 IF(d.is_active, m.xml, NULL) as xml,
-                CONVERT(IF(d.is_active, m.xml, NULL) USING utf8mb4) as parsexml,
+                CONVERT(IF(d.is_active, IFNULL(m.xml,'&lt;a/&gt;'), '&lt;a/&gt;') USING utf8mb4) as parsexml,
                 m.xml IS NOT NULL as has_metadata,
                 
                 m.id as metadata_id,
 
                 IF(d.is_active, m.dif, NULL) as dif,
-                CONVERT(IF(d.is_active, m.dif, NULL) USING utf8mb4) as parsedif,
+                CONVERT(IF(d.is_active, IFNULL(m.dif,'&lt;a/&gt;'), '&lt;a/&gt;') USING utf8mb4) as parsedif,                
                 m.dif IS NOT NULL as has_dif,
 
                 IF(d.is_active, m.iso, NULL) as iso,
-                CONVERT(IF(d.is_active, m.iso, NULL) USING utf8mb4) as parseiso,
+                CONVERT(IF(d.is_active, IFNULL(m.iso,'&lt;a/&gt;'), '&lt;a/&gt;') USING utf8mb4) as parseiso,
                 m.iso IS NOT NULL as has_iso,
 
                 d.created AS created,
@@ -107,7 +107,6 @@
         <field column="description" xpath="//description" />
         <field column="descriptionType" xpath="//description/@descriptionType" />
         <field column="geo" xpath="//geo" />
-
       </entity>
 
       <entity name="iso" 

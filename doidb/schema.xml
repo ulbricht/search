@@ -67,7 +67,9 @@
       </analyzer>
     </fieldType>
 
-    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" distErrPct="0.025" maxDistErr="0.000009" />
+    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" 
+               spatialContextFactory="JTS" autoIndex="true" geo="true"
+               distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
 
     <!-- lowercases the entire field value, keeping it as a single token.  -->
     <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
