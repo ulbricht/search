@@ -82,7 +82,14 @@
             <xsl:otherwise>
                 <xsl:element name="geo" namespace="{namespace-uri()}">
                     <xsl:text>POINT(</xsl:text>
-                    <xsl:value-of select="$lon"/>
+                    <xsl:choose>
+                        <xsl:when test="$lon &gt; 180">
+                            <xsl:value-of select="$lon - 360"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$lon"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                     <xsl:text> </xsl:text>
                     <xsl:value-of select="$lat"/>
                     <xsl:text>)</xsl:text>
@@ -137,6 +144,7 @@
             <xsl:when test="$minlat &gt; $maxlat"/>
             <xsl:when test="$minlon &gt; $maxlon"/>
             <xsl:when test="$minlon='' or $maxlon='' or $minlat='' or $maxlat=''"/>
+            <!-- points-->
             <xsl:when test="$minlon=$maxlon and $minlat=$maxlat">
                 <xsl:element name="geo" namespace="{namespace-uri()}">
                     <xsl:text>POINT(</xsl:text>
@@ -146,6 +154,49 @@
                     <xsl:text>)</xsl:text>
                 </xsl:element>
             </xsl:when>
+            <!-- line-->
+            <xsl:when test="$minlat=$maxlat or $minlon=$maxlon">
+                  <xsl:element name="geo" namespace="{namespace-uri()}">
+                    <xsl:text>LINESTRING(</xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="$minlon &lt; $maxlon">
+                            <xsl:value-of select="$minlon"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$maxlon"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text> </xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="$minlat &lt; $maxlat">
+                            <xsl:value-of select="$minlat"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$maxlat"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text>, </xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="$minlon &gt; $maxlon">
+                            <xsl:value-of select="$minlon"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$maxlon"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text> </xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="$minlat &gt; $maxlat">
+                            <xsl:value-of select="$minlat"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$maxlat"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text>)</xsl:text>
+                </xsl:element>          
+            </xsl:when> 
+            <!-- polygon-->          
             <xsl:otherwise>
                 <xsl:element name="geo" namespace="{namespace-uri()}">
                     <xsl:text>POLYGON((</xsl:text>
